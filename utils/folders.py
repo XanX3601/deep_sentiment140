@@ -6,7 +6,7 @@ DATASET_FOLDER = "dataset/"
 
 
 def create_dir(directory_path, delete_old=False):
-    """Create dir if not found.
+    """Create directory.
 
     Args:
         directory_path (str): path of the directory to create
