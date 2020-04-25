@@ -3,6 +3,8 @@
 import os
 
 DATASET_FOLDER = "dataset/"
+RESULTS_FOLDER = "results/"
+MODELS_FOLDER = "models/"
 
 
 def create_dir(directory_path, delete_old=False):
