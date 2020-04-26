@@ -10,11 +10,11 @@ import utils
 
 DATASET_URL = "http://cs.stanford.edu/people/alecmgo/trainingandtestdata.zip"
 
-parser = argparse.ArgumentParser(
-    description="Script to download Sentiment140 dataset. .csv files will be"
-                "placed in {}".format(utils.DATASET_FOLDER))
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script to download Sentiment140 dataset. .csv files"
+                    "will beplaced in {}".format(utils.DATASET_FOLDER))
+
     args = parser.parse_args()
     print("Downloading Sentiment140 dataset...")
 

@@ -2,13 +2,22 @@
 
 Deep learning approaches for Sentiment140 dataset.
 
-## Prerequisites
+## Installation
 
-You need to have Python 3.6 (at least) installed on your system. To run this project, commands are the following.
+To get started, clone the project.
 
 ```shell
 git clone https://github.com/XanX3601/deep_sentiment140.git
 cd deep_sentiment140
+```
+
+## Prerequisites
+
+[Python](https://www.python.org/) 3.6 or higher is required.
+
+All Python requirements can be found in `requirements.txt` and can be installed as follow.
+
+```shell
 pip install -r requirements.txt
 ```
 

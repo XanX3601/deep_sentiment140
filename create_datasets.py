@@ -7,15 +7,13 @@ import pandas as pd
 
 import utils
 
-parser = argparse.ArgumentParser(
-    description="Script to create Sentiment140 train and test datasets. The "
-                "following files will be created: {}, {}, {} and {}".format(
-                    utils.X_TRAIN_PATH,
-                    utils.Y_TRAIN_PATH,
-                    utils.X_TEST_PATH,
-                    utils.Y_TEST_PATH,))
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script to create Sentiment140 train and test datasets. "
+                    "The following files will be created: {}, {}, {} and {}"
+                    .format(utils.X_TRAIN_PATH, utils.Y_TRAIN_PATH,
+                            utils.X_TEST_PATH, utils.Y_TEST_PATH,))
+
     args = parser.parse_args()
     print("Creating numpy files...")
 
