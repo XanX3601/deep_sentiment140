@@ -2,7 +2,6 @@
 
 import argparse
 import logging
-from datetime import datetime
 
 import numpy as np
 import torch
@@ -40,33 +39,18 @@ class Model0(nn.Module):
         pass
 
 
-def _p(text):
-    """Text preprocessing for logging.
-
-    Args:
-        text (str): text log
-
-    Returns:
-        p_text (str): preprocessed text
-    """
-    p_text = "{} - {}".format(
-        datetime.today().strftime("%Y-%m-%d-%H:%M:%S"), text)
-
-    return p_text
-
-
 def create(args):
     """Create a fresh new model.
 
     This function does not train or test the model. It just creates it and
     save it in models/model_name/model_name.pt.
     """
-    logging.info(_p("launching create function"))
+    logging.info("launching create function")
 
     model = Model0().to(device)
     torch.save(model, MODEL_PATH)
 
-    logging.info(_p("model created and saved in {}".format(MODEL_PATH)))
+    logging.info("model created and saved in {}".format(MODEL_PATH))
 
 
 def train(args):
@@ -78,19 +62,19 @@ def train(args):
 
     All operations on the training dataset are allowed.
     """
-    logging.info(_p("launching train function"))
+    logging.info("launching train function")
 
     raw_x_train = np.load(utils.X_TRAIN_PATH, allow_pickle=True)
     raw_y_train = np.load(utils.Y_TRAIN_PATH)
-    logging.info(_p("raw_x_train shape: {}".format(raw_x_train.shape)))
-    logging.info(_p("raw_y_train shape: {}".format(raw_y_train.shape)))
+    logging.info("raw_x_train shape: {}".format(raw_x_train.shape))
+    logging.info("raw_y_train shape: {}".format(raw_y_train.shape))
 
     x_train, x_valid, y_train, y_valid = train_test_split(
         raw_x_train, raw_y_train, test_size=0.2, random_state=42)
-    logging.info(_p("x_train shape: {}".format(x_train.shape)))
-    logging.info(_p("y_train shape: {}".format(y_train.shape)))
-    logging.info(_p("x_valid shape: {}".format(x_valid.shape)))
-    logging.info(_p("y_valid shape: {}".format(y_valid.shape)))
+    logging.info("x_train shape: {}".format(x_train.shape))
+    logging.info("y_train shape: {}".format(y_train.shape))
+    logging.info("x_valid shape: {}".format(x_valid.shape))
+    logging.info("y_valid shape: {}".format(y_valid.shape))
 
     # TODO
     # train function
@@ -104,12 +88,12 @@ def evaluate(args):
 
     The testing dataset must not be modified.
     """
-    logging.info(_p("launching evaluate function"))
+    logging.info("launching evaluate function")
 
     x_test = np.load(utils.X_TEST_PATH, allow_pickle=True)
     y_test = np.load(utils.Y_TEST_PATH)
-    logging.info(_p("x_test shape: {}".format(x_test.shape)))
-    logging.info(_p("y_test shape: {}".format(y_test.shape)))
+    logging.info("x_test shape: {}".format(x_test.shape))
+    logging.info("y_test shape: {}".format(y_test.shape))
 
     model = torch.load(MODEL_PATH).to(device)
     model.eval()
@@ -125,7 +109,9 @@ if __name__ == "__main__":
         filename="{}{}/{}.log".format(utils.RESULTS_FOLDER,
                                       MODEL_NAME, MODEL_NAME),
         filemode="a",
-        level=logging.DEBUG
+        level=logging.DEBUG,
+        format="%(asctime)s - %(levelname)s: %(message)s",
+        datefmt="%Y/%m/%d %H:%M:%S",
     )
 
     # Creating necessary folders
