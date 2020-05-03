@@ -1,4 +1,7 @@
-"""First model for the sentiment analysis problem."""
+"""First model for the sentiment analysis problem.
+
+This file can be used as a model for all models.
+"""
 
 import argparse
 import logging
@@ -10,15 +13,15 @@ from sklearn.model_selection import train_test_split
 
 import utils
 
-# General variables
+# Global variables
 # ------------------------------------------
 
-MODEL_NAME = "model_0"
+MODEL_NAME = "model_template"
 MODEL_PATH = "{}{}.pt".format(utils.MODELS_FOLDER, MODEL_NAME)
 device = None
 
 
-class Model0(nn.Module):
+class Model(nn.Module):
     """Model class.
 
     The model is a function taking as input a batch of strings and returning
@@ -27,7 +30,7 @@ class Model0(nn.Module):
 
     def __init__(self):
         """Init function."""
-        super(Model0, self).__init__()
+        super(Model, self).__init__()
 
     def forward(self, x):
         """Forward function.
@@ -47,7 +50,7 @@ def create(args):
     """
     logging.info("launching create function")
 
-    model = Model0().to(device)
+    model = Model().to(device)
     torch.save(model, MODEL_PATH)
 
     logging.info("model created and saved in {}".format(MODEL_PATH))
