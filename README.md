@@ -27,6 +27,7 @@ The dataset is Sentiment140. You can find the official website [here](http://hel
 
 - To get data, you first need to download raw `.csv` files with the following command: `python download_data.py`.
 - Then you need to create `numpy` files for train and test datasets with the following command: `python create_datasets.py`.
+- Finally, you need to clean the dataset inputs by running: `python clean_dataset.py`.
 
 ## Models
 
