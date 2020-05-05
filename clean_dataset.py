@@ -31,7 +31,7 @@ def cleaner(data):
     data_clean = re.sub(r"@[A-Za-z0-9]+", "", data_clean)
 
     # Remove hastag #, or other informations, keep only letter
-    data_clean = re.sub("[^a-zA-Z]", " ", data_clean)
+    data_clean = re.sub("#[^a-zA-Z]", " ", data_clean)
 
     # Lowercase letters
     data_clean = data_clean.lower()
