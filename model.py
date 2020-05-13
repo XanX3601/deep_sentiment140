@@ -200,6 +200,11 @@ def evaluate(model, iterator, criterion):
 
     
 def load_dataset(mode):
+    """Load the dataset and convert it to TabularDataset torch
+    
+        mode = train : load the train dataset
+        mode = test: load the test dataset
+    """
     if mode == 'train':
         x_train = np.load(utils.X_TRAIN_PATH)
         y_train = np.load(utils.Y_TRAIN_PATH)
@@ -327,7 +332,7 @@ if __name__ == "__main__":
 
     best_valid_loss = float('inf') # lowest valid lost
     
-    for epoch in range(1):
+    for epoch in range(4):
     
         train_loss, train_acc = train(model, train_iterator, optimizer, criterion) #training loss and accuracy
         valid_loss, valid_acc = evaluate(model, valid_iterator, criterion)#validation loss and accuracy
