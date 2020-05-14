@@ -2,17 +2,14 @@ import argparse
 import re
 
 import numpy as np
+from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 import utils
 from bs4 import BeautifulSoup
 from nltk.tokenize import WordPunctTokenizer
-from sklearn.model_selection import train_test_split
 
 
-from bs4 import BeautifulSoup
-from nltk.tokenize import WordPunctTokenizer
-from sklearn.model_selection import train_test_split
 def cleaner(data):
     """Clean data.
     Args:
@@ -29,7 +26,7 @@ def cleaner(data):
 
     # Remove mention @
     data_clean = re.sub(r"@[A-Za-z0-9]+", "", data_clean)
-    
+
     # remove \xef\xbf\xbd (UTF-8 BOM)
     try:
         data_clean = data_clean.decode("utf-8-sig").replace(u"\ufffd", "?")
@@ -70,7 +67,6 @@ if __name__ == "__main__":
 
     x_train_clean = np.array(x_train_clean)
     x_test_clean = np.array(x_test_clean)
-    
 
     np.save(utils.X_TRAIN_PATH, x_train_clean)
     np.save(utils.X_TEST_PATH, x_test_clean)

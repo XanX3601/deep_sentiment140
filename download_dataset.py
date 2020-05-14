@@ -24,4 +24,3 @@ if __name__ == "__main__":
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall(utils.DATASET_FOLDER)
     print("Done!")
-
