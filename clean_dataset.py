@@ -35,10 +35,18 @@ if __name__ == "__main__":
     x_test_clean = []
 
     for x_i in tqdm(x_test, desc="Cleaning test dataset"):
-        x_test_clean.append(cleaner(x_i))
+        clean_x_i = cleaner(x_i)
+
+        # If string not empty
+        if clean_x_i:
+            x_test_clean.append(cleaner(x_i))
 
     for x_i in tqdm(x_train, desc="Cleaning train dataset"):
-        x_train_clean.append(cleaner(x_i))
+        clean_x_i = cleaner(x_i)
+
+        # If string not empty
+        if clean_x_i:
+            x_train_clean.append(cleaner(x_i))
 
     x_train_clean = np.array(x_train_clean)
     x_test_clean = np.array(x_test_clean)
