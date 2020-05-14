@@ -24,20 +24,31 @@ device = None
 
 
 class LSTM(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, hidden_dim, output_dim, n_layers,
-                 bidirectional, dropout, pad_idx):
+    """LSTM model."""
+
+    def __init__(
+        self,
+        vocab_size,
+        embedding_dim,
+        hidden_dim,
+        output_dim,
+        n_layers,
+        bidirectional,
+        dropout,
+        pad_idx
+    ):
         """Init function.
 
-        vocab_size - vocabulary size
-        embedding_dim - size of the dense word vectors
-        hidden_dim - size of the hidden states
-        output_dim - number of classes
-        n_layers - number of multi-layer RNN
-        bidirectional - boolean - use both directions of LSTM
-        dropout - dropout probability
-        pad_idx -  string representing the pad token
+        Args:
+            vocab_size (int): vocabulary size.
+            embedding_dim (int): size of the dense word vectors.
+            hidden_dim (int): size of the hidden states.
+            output_dim (int): number of classes.
+            n_layers (int): number of multi-layer RNN.
+            bidirectional (bool): use both directions of LSTM.
+            dropout (float): dropout probability.
+            pad_idx (str): string representing the pad token.
         """
-
         super().__init__()
 
         # Feed in the embedding layer
@@ -59,22 +70,26 @@ class LSTM(nn.Module):
 
     def forward(self, x, x_lengths):
         """Forward function.
+
         Args:
-            x (tensor): tensor of strings, shape (N,) with N the batch size
-            s (tensor): tensor of scalars, shape (N,) with N the batch size
+            x (tensor): tensor of strings, shape (N,) with N the batch size.
+            x_lengths (tensor): tensor of scalars, shape (N,) with N the batch
+                size.
         """
         embedded = self.dropout(self.embedding(x))
 
+        # Pack the embeddings
         packed_embedded = nn.utils.rnn.pack_padded_sequence(
-            embedded, x_lengths)  # pack the embeddings
+            embedded, x_lengths)
 
-        packed_output, (hidden, cell) = self.encoder(
-            packed_embedded)  # encoder output
+        # Encoder output
+        packed_output, (hidden, cell) = self.encoder(packed_embedded)
 
+        # Unpack sequence, transform to a tensor
         output, output_lengths = nn.utils.rnn.pad_packed_sequence(
-            packed_output)  # unpack sequence, transform to a tensor
+            packed_output)
 
-        # final layer forward and backward hidden states
+        # Final layer forward and backward hidden states
         hidden = self.dropout(
             torch.cat((hidden[-2, :, :], hidden[-1, :, :]), dim=1))
 
@@ -83,6 +98,7 @@ class LSTM(nn.Module):
 
 def create(model):
     """Create a fresh new model.
+
     This function does not train or test the model. It just creates it and
     save it in models/model_name/model_name.pt.
     """
@@ -96,22 +112,24 @@ def create(model):
 
 
 def batch_accuracy(predictions, label):
-    """Compute accuracy per batch.
-    """
+    """Compute accuracy per batch."""
     logging.info("launching batch accuracy")
 
     # Round predictions to the closest integer using the sigmoid function
     preds = torch.round(torch.sigmoid(predictions))
 
-    correct = (preds == label).float()  # If prediction is equal to label
+    # If prediction is equal to label
+    correct = (preds == label).float()
 
-    accuracy = correct.sum() / len(correct)  # Average correct predictions
+    # Average correct predictions
+    accuracy = correct.sum() / len(correct)
 
     return accuracy
 
 
 def train(model, iterator, optimizer, criterion):
     """Train an existing model.
+
     This function trains the model models/model_name/model_name.pt. It does not
     use the testing dataset, but only the training one. The model is updated
     after each epoch.
@@ -148,8 +166,10 @@ def train(model, iterator, optimizer, criterion):
 
 def evaluate(model, iterator, criterion):
     """Evaluate an existing model.
+
     This function evaluates the model models/model_name/model_name.pt on the
     testing dataset. Results are saved in results/model_name/.
+
     The testing dataset must not be modified.
     """
     logging.info("launching evaluate function")
@@ -183,15 +203,8 @@ def load_dataset(mode):
         x_train = np.load(utils.X_TRAIN_PATH)
         y_train = np.load(utils.Y_TRAIN_PATH)
 
-        index = []  # delete empty lines
-        for i in range(len(x_train)):
-            if x_train[i] == '':
-                index.append(i)
-        x_train_clean = np.delete(x_train, index)  # 3247 empty cells
-        y_train = np.delete(y_train, index)
-
         x_train1, x_train2, y_train1, y_train2 = train_test_split(
-            x_train_clean, y_train, test_size=0.1, random_state=42)
+            x_train, y_train, test_size=0.1, random_state=42)
 
         dataframe = pd.concat(
             [pd.DataFrame(x_train2), pd.DataFrame(y_train2)], axis=1)
@@ -232,6 +245,15 @@ def load_dataset(mode):
 
 
 if __name__ == "__main__":
+    # Creating necessary folders
+    # ------------------------------------------
+
+    utils.create_dir(utils.RESULTS_FOLDER, delete_old=False)
+    utils.create_dir(utils.MODELS_FOLDER, delete_old=False)
+
+    utils.create_dir("{}{}/".format(utils.RESULTS_FOLDER, MODEL_NAME), False)
+    utils.create_dir("{}{}/".format(utils.MODELS_FOLDER, MODEL_NAME), False)
+
     # Logging
     # ------------------------------------------
     logging.basicConfig(
@@ -242,15 +264,6 @@ if __name__ == "__main__":
         format="%(asctime)s - %(levelname)s: %(message)s",
         datefmt="%Y/%m/%d %H:%M:%S",
     )
-
-    # Creating necessary folders
-    # ------------------------------------------
-
-    utils.create_dir(utils.RESULTS_FOLDER, delete_old=False)
-    utils.create_dir(utils.MODELS_FOLDER, delete_old=False)
-
-    utils.create_dir("{}{}/".format(utils.RESULTS_FOLDER, MODEL_NAME), False)
-    utils.create_dir("{}{}/".format(utils.MODELS_FOLDER, MODEL_NAME), False)
 
     # Main parser
     # ------------------------------------------
