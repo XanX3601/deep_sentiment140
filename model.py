@@ -1,14 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May  7 19:32:15 2020
-
-@author: minh
-"""
-
-"""First model for the sentiment analysis problem.
-This file can be used as a model for all models.
-"""
+"""LSTM model for the sentiment analysis problem."""
 
 import argparse
 import logging
@@ -109,10 +99,7 @@ def create(model):
     logging.info("model created and saved in {}".format(MODEL_PATH))
     
 def batch_accuracy(predictions, label):
-    
     """Compute accuracy per batch.
-    predictions - float
-    label - 0 or 1
     """
     logging.info("launching batch accuracy")
 
@@ -130,11 +117,8 @@ def train(model, iterator, optimizer, criterion):
     This function trains the model models/model_name/model_name.pt. It does not
     use the testing dataset, but only the training one. The model is updated
     after each epoch.
-    All operations on the training dataset are allowed.
     """
     logging.info("launching train function")
-    
-
     
     training_loss = 0.0 # Cumulated Training loss
     
@@ -144,7 +128,6 @@ def train(model, iterator, optimizer, criterion):
     
     for batch in iterator: # For each batch in the training iterator
         
-
         optimizer.zero_grad() #zero gradients
         
         x, x_lengths = batch.text #tuple (tensor, len of seq)
@@ -164,8 +147,6 @@ def train(model, iterator, optimizer, criterion):
     
     return training_loss / len(iterator), training_acc / len(iterator)
 
-
-
 def evaluate(model, iterator, criterion):
     """Evaluate an existing model.
     This function evaluates the model models/model_name/model_name.pt on the
@@ -173,7 +154,6 @@ def evaluate(model, iterator, criterion):
     The testing dataset must not be modified.
     """
     logging.info("launching evaluate function")
-
     
     eval_loss = 0.0 #training loss
 
@@ -197,14 +177,8 @@ def evaluate(model, iterator, criterion):
             eval_acc += accuracy.item()
         
     return eval_loss / len(iterator), eval_acc / len(iterator)
-
     
 def load_dataset(mode):
-    """Load the dataset and convert it to TabularDataset torch
-    
-        mode = train : load the train dataset
-        mode = test: load the test dataset
-    """
     if mode == 'train':
         x_train = np.load(utils.X_TRAIN_PATH)
         y_train = np.load(utils.Y_TRAIN_PATH)
@@ -242,8 +216,6 @@ def load_dataset(mode):
         os.remove('test_set.csv')
 
     return TEXT, LABEL, dataset
-    
-
 
 
 if __name__ == "__main__":
@@ -275,11 +247,9 @@ if __name__ == "__main__":
     parser.add_argument("--cuda", help="Using GPU or not", action="store_true")
     subparsers = parser.add_subparsers()
 
-
     TEXT, LABEL, dataset = load_dataset(mode ='train')
     
     (x_train, x_valid, x_test) = dataset.split(split_ratio=[0.8,0.1,0.1])
-
 
     TEXT.build_vocab(x_train, 
                      max_size = 25000,
@@ -294,7 +264,6 @@ if __name__ == "__main__":
         sort_key = lambda x: len(x.text),
         sort_within_batch = True)
     
-
     # Create parser
     # ------------------------------------------
 
@@ -332,7 +301,7 @@ if __name__ == "__main__":
 
     best_valid_loss = float('inf') # lowest valid lost
     
-    for epoch in range(4):
+    for epoch in range(1):
     
         train_loss, train_acc = train(model, train_iterator, optimizer, criterion) #training loss and accuracy
         valid_loss, valid_acc = evaluate(model, valid_iterator, criterion)#validation loss and accuracy
@@ -386,6 +355,5 @@ if __name__ == "__main__":
 
     use_cuda = args.cuda and torch.cuda_is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
-
 
     #args.func(args)
