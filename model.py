@@ -182,7 +182,18 @@ def load_dataset(mode):
     if mode == 'train':
         x_train = np.load(utils.X_TRAIN_PATH)
         y_train = np.load(utils.Y_TRAIN_PATH)
-        dataframe = pd.concat([pd.DataFrame(x_train), pd.DataFrame(y_train)], axis=1)
+        
+        index = [] #delete empty lines
+        for i in range(len(x_train)):
+            if x_train[i] =='':
+              index.append(i)
+        x_train_clean = np.delete(x_train, index) # 3247 empty cells
+        y_train = np.delete(y_train, index)
+    
+        x_train1, x_train2, y_train1, y_train2 = train_test_split(
+            x_train_clean, y_train, test_size=0.1, random_state=42)
+        
+        dataframe = pd.concat([pd.DataFrame(x_train2), pd.DataFrame(y_train2)], axis=1)
         pd.DataFrame(dataframe).to_csv("train_set.csv", index=None)
         
         TEXT = data.Field(tokenize='spacy', lower=True, include_lengths= True)
