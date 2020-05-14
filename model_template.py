@@ -117,6 +117,7 @@ if __name__ == "__main__":
 
     # Logging
     # ------------------------------------------
+
     logging.basicConfig(
         filename="{}{}/{}.log".format(utils.RESULTS_FOLDER,
                                       MODEL_NAME, MODEL_NAME),
