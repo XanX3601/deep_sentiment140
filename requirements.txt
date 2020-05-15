@@ -1,6 +1,7 @@
-bs4
-nltk
 numpy
 pandas
-tqdm
+scikit-learn
+spacy
 torch
+torchtext
+tqdm

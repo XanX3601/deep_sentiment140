@@ -37,7 +37,6 @@ class Model(nn.Module):
 
         Args:
             x (tensor): tensor of strings, shape (N,) with N the batch size
-            s (tensor): tensor of scalars, shape (N,) with N the batch size
         """
         pass
 
@@ -106,8 +105,17 @@ def evaluate(args):
 
 
 if __name__ == "__main__":
+    # Creating necessary folders
+    # ------------------------------------------
+
+    utils.create_dir(utils.RESULTS_FOLDER, delete_old=False)
+    utils.create_dir(utils.MODELS_FOLDER, delete_old=False)
+
+    utils.create_dir("{}{}/".format(utils.RESULTS_FOLDER, MODEL_NAME), False)
+
     # Logging
     # ------------------------------------------
+
     logging.basicConfig(
         filename="{}{}/{}.log".format(utils.RESULTS_FOLDER,
                                       MODEL_NAME, MODEL_NAME),
@@ -116,15 +124,6 @@ if __name__ == "__main__":
         format="%(asctime)s - %(levelname)s: %(message)s",
         datefmt="%Y/%m/%d %H:%M:%S",
     )
-
-    # Creating necessary folders
-    # ------------------------------------------
-
-    utils.create_dir(utils.RESULTS_FOLDER, delete_old=False)
-    utils.create_dir(utils.MODELS_FOLDER, delete_old=False)
-
-    utils.create_dir("{}{}/".format(utils.RESULTS_FOLDER, MODEL_NAME), False)
-    utils.create_dir("{}{}/".format(utils.MODELS_FOLDER, MODEL_NAME), False)
 
     # Main parser
     # ------------------------------------------

@@ -31,7 +31,7 @@ The dataset is Sentiment140. You can find the official website [here](http://hel
 
 ## Models
 
-To answer the sentiment analysis problem, different models are proposed. In `models/model_name` are stored a model's weights. In `results/model_name` are stored the model's results and logs. Each model works as follow. For each command, you can add `-h` to get more info.
+To answer the sentiment analysis problem, different models are proposed. In `models/model_name` are stored a model's weights. In `results/model_name` are stored the model's results and logs. Each model works as follow. For each command, you can add `-h` to get more info. The available models are: `model_lstm.py`.
 
 - To create the model, execute:
 

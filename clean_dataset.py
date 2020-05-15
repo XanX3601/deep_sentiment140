@@ -4,44 +4,22 @@ import argparse
 import re
 
 import numpy as np
-from tqdm import tqdm
+from sklearn.model_selection import train_test_split
+from tqdm import trange
 
 import utils
-from bs4 import BeautifulSoup
-from nltk.tokenize import WordPunctTokenizer
 
 
 def cleaner(data):
     """Clean data.
-
     Args:
         data (str): string to clean
-
     Returns:
-        token_clean (str): cleaned string
+        data_clean (str): cleaned string
     """
-    # Remove HTML Code
-    data_clean = BeautifulSoup(data, features="lxml")
-    data_clean = data_clean.get_text()
-
-    # Remove URL http
-    data_clean = re.sub("https?://[A-Za-z0-9./]+", "", data_clean)
-
-    # Remove mention @
-    data_clean = re.sub(r"@[A-Za-z0-9]+", "", data_clean)
-
-    # Remove hastag #, or other informations, keep only letter
-    data_clean = re.sub("#[^a-zA-Z]", " ", data_clean)
-
-    # Lowercase letters
-    data_clean = data_clean.lower()
-
-    # Remove unnecessary spaces
-    tok = WordPunctTokenizer()
-    token_clean = tok.tokenize(data_clean)
-    token_clean = (" ".join(token_clean)).strip()
-
-    return token_clean
+    cleaning_regex = "@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+"
+    data_clean = re.sub(cleaning_regex, " ", data.lower()).strip()
+    return data_clean
 
 
 if __name__ == "__main__":
@@ -56,14 +34,37 @@ if __name__ == "__main__":
     x_train_clean = []
     x_test_clean = []
 
-    for x_i in tqdm(x_test, desc="Cleaning test dataset"):
-        x_test_clean.append(cleaner(x_i))
+    y_train = np.load(utils.Y_TRAIN_PATH)
+    y_test = np.load(utils.Y_TEST_PATH)
+    y_train_delete = []
+    y_test_delete = []
 
-    for x_i in tqdm(x_train, desc="Cleaning train dataset"):
-        x_train_clean.append(cleaner(x_i))
+    for i in trange(x_test.shape[0], desc="Cleaning test dataset"):
+        clean_x_i = cleaner(x_test[i])
+
+        # If string not empty
+        if clean_x_i:
+            x_test_clean.append(clean_x_i)
+        else:
+            y_test_delete.append(i)
+
+    for i in trange(x_train.shape[0], desc="Cleaning train dataset"):
+        clean_x_i = cleaner(x_train[i])
+
+        # If string not empty
+        if clean_x_i:
+            x_train_clean.append(clean_x_i)
+        else:
+            y_train_delete.append(i)
 
     x_train_clean = np.array(x_train_clean)
     x_test_clean = np.array(x_test_clean)
 
+    y_test = np.delete(y_test, y_test_delete)
+    y_train = np.delete(y_train, y_train_delete)
+
     np.save(utils.X_TRAIN_PATH, x_train_clean)
     np.save(utils.X_TEST_PATH, x_test_clean)
+
+    np.save(utils.Y_TRAIN_PATH, y_train)
+    np.save(utils.Y_TEST_PATH, y_test)
