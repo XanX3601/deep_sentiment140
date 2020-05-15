@@ -19,6 +19,7 @@ All Python requirements can be found in `requirements.txt` and can be installed 
 
 ```shell
 pip install -r requirements.txt
+python -m spacy download en
 ```
 
 ## Dataset
