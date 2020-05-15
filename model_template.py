@@ -37,7 +37,6 @@ class Model(nn.Module):
 
         Args:
             x (tensor): tensor of strings, shape (N,) with N the batch size
-            s (tensor): tensor of scalars, shape (N,) with N the batch size
         """
         pass
 
