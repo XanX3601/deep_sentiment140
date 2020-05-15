@@ -112,7 +112,6 @@ if __name__ == "__main__":
     utils.create_dir(utils.MODELS_FOLDER, delete_old=False)
 
     utils.create_dir("{}{}/".format(utils.RESULTS_FOLDER, MODEL_NAME), False)
-    utils.create_dir("{}{}/".format(utils.MODELS_FOLDER, MODEL_NAME), False)
 
     # Logging
     # ------------------------------------------
